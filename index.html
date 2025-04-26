@@ -483,7 +483,13 @@
                     if (this.classList.contains('open')) {
                         card.style.animation = 'slideIn 1s ease forwards';
                         setTimeout(() => {
-                            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Scroll to show the entire envelope
+                            const envelopeRect = this.getBoundingClientRect();
+                            const scrollOffset = window.pageYOffset + envelopeRect.top - 20;
+                            window.scrollTo({
+                                top: scrollOffset,
+                                behavior: 'smooth'
+                            });
                         }, 100);
                     } else {
                         card.style.animation = 'none';
