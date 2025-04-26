@@ -508,14 +508,14 @@
                             </div>
                             <div class="message-container">
                                 <div class="messages-wrapper">
-                                    <p class="message" data-delay="4000">Tiff...</p>
-                                    <p class="message" data-delay="6000">In just four months...</p>
-                                    <p class="message" data-delay="8000">Your smile became my favorite sight.</p>
-                                    <p class="message" data-delay="10000">Your kindness, my daily inspiration.</p>
-                                    <p class="message" data-delay="12000">Today's a special day.</p>
-                                    <p class="message" data-delay="14000">And tonight...</p>
-                                    <p class="message" data-delay="18000">We're celebrating at VALHALLA!</p>
-                                    <p class="message" data-delay="22000">To our first celebration — and many more.</p>
+                                    <p class="message" data-delay="3000">Tiff...</p>
+                                    <p class="message" data-delay="5000">In just four months...</p>
+                                    <p class="message" data-delay="7000">Your smile became my favorite sight.</p>
+                                    <p class="message" data-delay="9000">Your kindness, my daily inspiration.</p>
+                                    <p class="message" data-delay="13000">Today's a special day.</p>
+                                    <p class="message" data-delay="15000">And tonight...</p>
+                                    <p class="message" data-delay="19000">We're celebrating at VALHALLA!</p>
+                                    <p class="message" data-delay="23000">To our first celebration — and many more.</p>
                                 </div>
                                 <div class="signature-wrapper">
                                     <p class="signature-prefix">Yours,</p>
@@ -620,6 +620,7 @@
 
                     const message = messages[index];
                     const position = (index % 4) * messageHeight;
+                    const currentDelay = parseInt(message.dataset.delay);
 
                     // If this is the fifth message (index 4), fade out the first four messages
                     if (index === 4) {
@@ -632,19 +633,19 @@
                         }
                     }
 
-                    // Position and show new message
-                    message.style.transform = `translateY(${position}px)`;
-                    message.classList.add('show');
-
-                    // Schedule next message
-                    const delay = parseInt(message.dataset.delay);
-                    const nextDelay = index + 1 < messages.length ? 
-                        parseInt(messages[index + 1].dataset.delay) - delay : 
-                        2000;
-
+                    // Position and show new message after its delay
                     setTimeout(() => {
-                        showMessage(index + 1);
-                    }, nextDelay);
+                        message.style.transform = `translateY(${position}px)`;
+                        message.classList.add('show');
+
+                        // Schedule next message
+                        if (index + 1 < messages.length) {
+                            const nextDelay = parseInt(messages[index + 1].dataset.delay) - currentDelay;
+                            setTimeout(() => {
+                                showMessage(index + 1);
+                            }, nextDelay);
+                        }
+                    }, index === 0 ? currentDelay : 0);
                 }
 
                 // Start the animation
