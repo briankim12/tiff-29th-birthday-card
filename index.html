@@ -21,6 +21,8 @@
             flex-direction: column;
             align-items: center;
             padding: 2rem;
+            padding-bottom: 4rem;
+            overflow-x: hidden;
         }
 
         .content-wrapper {
@@ -29,12 +31,14 @@
             display: flex;
             gap: 2rem;
             align-items: flex-start;
+            padding-bottom: 200px;
         }
 
         .envelope-wrapper {
             flex: 1;
             perspective: 1000px;
             position: relative;
+            margin-top: 100px;
         }
 
         .envelope {
@@ -129,8 +133,8 @@
         }
 
         .envelope.open {
-            transform: rotateX(180deg) translateY(-20px);
-            -webkit-transform: rotateX(180deg) translateY(-20px);
+            transform: rotateX(180deg) translateY(0);
+            -webkit-transform: rotateX(180deg) translateY(0);
         }
 
         .envelope.open .envelope-flap {
@@ -188,7 +192,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .photo-item {
@@ -316,21 +320,22 @@
         @media (max-width: 768px) {
             body {
                 padding: 0.5rem;
-                max-width: 100%;
-                overflow-x: hidden;
+                padding-bottom: 3rem;
             }
 
             .content-wrapper {
+                min-height: 600px;
                 padding: 0;
                 gap: 1rem;
                 flex-direction: column;
                 align-items: center;
+                padding-bottom: 150px;
             }
             
             .envelope-wrapper {
                 width: 100%;
                 max-width: 300px;
-                margin: 0 auto;
+                margin: 50px auto 0;
             }
             
             .envelope {
@@ -456,6 +461,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Scroll to top when page loads
+            window.scrollTo(0, 0);
+
             const heart = document.querySelector('.fa-heart');
             const surpriseBtn = document.querySelector('.surprise-btn');
             const messageContainer = document.querySelector('.message-container');
@@ -482,17 +490,19 @@
                     this.classList.toggle('open');
                     if (this.classList.contains('open')) {
                         card.style.animation = 'slideIn 1s ease forwards';
+                        // Start scrolling as the envelope begins to turn
                         setTimeout(() => {
-                            // Scroll to show the entire envelope
-                            const envelopeRect = this.getBoundingClientRect();
-                            const scrollOffset = window.pageYOffset + envelopeRect.top - 20;
                             window.scrollTo({
-                                top: scrollOffset,
+                                top: document.body.scrollHeight,
                                 behavior: 'smooth'
                             });
-                        }, 100);
+                        }, 300); // Start scrolling partway through the flip animation
                     } else {
                         card.style.animation = 'none';
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
                     }
                 }
             });
