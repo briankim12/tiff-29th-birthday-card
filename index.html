@@ -508,14 +508,14 @@
                             </div>
                             <div class="message-container">
                                 <div class="messages-wrapper">
-                                    <p class="message" data-delay="3000">Tiff...</p>
-                                    <p class="message" data-delay="5000">In just four months...</p>
-                                    <p class="message" data-delay="7000">Your smile became my favorite sight.</p>
-                                    <p class="message" data-delay="9000">Your kindness, my daily inspiration.</p>
-                                    <p class="message" data-delay="13000">Today's a special day.</p>
-                                    <p class="message" data-delay="15000">And tonight...</p>
-                                    <p class="message" data-delay="19000">We're celebrating at VALHALLA!</p>
-                                    <p class="message" data-delay="23000">To our first celebration — and many more.</p>
+                                    <p class="message" data-delay="2000">Tiff...</p>
+                                    <p class="message" data-delay="4000">In just four months...</p>
+                                    <p class="message" data-delay="6000">Your smile became my favorite sight.</p>
+                                    <p class="message" data-delay="8000">Your kindness warms my heart.</p>
+                                    <p class="message" data-delay="12000">Today's a special day.</p>
+                                    <p class="message" data-delay="14000">And tonight...</p>
+                                    <p class="message" data-delay="18000">We're celebrating at VALHALLA!</p>
+                                    <p class="message" data-delay="22000">To our first celebration — and many more.</p>
                                 </div>
                                 <div class="signature-wrapper">
                                     <p class="signature-prefix">Yours,</p>
@@ -644,6 +644,11 @@
                             setTimeout(() => {
                                 showMessage(index + 1);
                             }, nextDelay);
+                        } else {
+                            // This is the last message, show signature after 2 seconds
+                            setTimeout(() => {
+                                signatureWrapper.classList.add('show');
+                            }, 2000);
                         }
                     }, index === 0 ? currentDelay : 0);
                 }
