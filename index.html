@@ -188,15 +188,63 @@
             background: #ffffff;
             border-radius: 8px;
             border: 1px solid #d4b483;
-            margin-bottom: 2rem;
             box-shadow: inset 0 0 20px rgba(139, 69, 19, 0.1);
+            position: relative;
+            min-height: 300px;
         }
 
-        .message-container p {
+        .messages-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .message-container .message {
             font-size: 1.2rem;
             color: #8b4513;
             line-height: 1.6;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            opacity: 0;
+            position: absolute;
+            left: 0;
+            right: 0;
+            transform: translateY(100%);
+            transition: all 0.5s ease-in-out;
+        }
+
+        .message-container .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-container .message.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .signature-wrapper {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            text-align: right;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .signature-wrapper.show {
+            opacity: 1;
+        }
+
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.4rem;
+            color: #8b4513;
+            margin: 0;
+        }
+
+        .signature-prefix {
+            font-size: 1.1rem;
+            color: #8b4513;
+            margin-bottom: 0.3rem;
         }
 
         .gallery-container {
@@ -459,7 +507,20 @@
                                 <h1>Happy 29th Birthday Tiff! <i class="fas fa-heart"></i></h1>
                             </div>
                             <div class="message-container">
-                                <p>Every moment with you is a treasure I hold dear.</p>
+                                <div class="messages-wrapper">
+                                    <p class="message" data-delay="4000">Tiff...</p>
+                                    <p class="message" data-delay="6000">In just four months...</p>
+                                    <p class="message" data-delay="8000">Your smile became my favorite sight.</p>
+                                    <p class="message" data-delay="10000">Your kindness, my daily inspiration.</p>
+                                    <p class="message" data-delay="12000">Today's a special day.</p>
+                                    <p class="message" data-delay="14000">And tonight...</p>
+                                    <p class="message" data-delay="18000">We're celebrating at VALHALLA!</p>
+                                    <p class="message" data-delay="22000">To our first celebration — and many more.</p>
+                                </div>
+                                <div class="signature-wrapper">
+                                    <p class="signature-prefix">Yours,</p>
+                                    <p class="signature">Brian Kim</p>
+                                </div>
                             </div>
                             <div class="button-container">
                                 <button class="surprise-btn">Click for the cutest smile :)</button>
@@ -510,19 +571,22 @@
                     this.classList.toggle('open');
                     if (this.classList.contains('open')) {
                         card.style.animation = 'slideIn 1s ease forwards';
-                        // Start scrolling as the envelope begins to turn
                         setTimeout(() => {
                             window.scrollTo({
                                 top: document.body.scrollHeight,
                                 behavior: 'smooth'
                             });
-                        }, 300); // Start scrolling partway through the flip animation
+                            animateMessages();
+                        }, 1000);
                     } else {
                         card.style.animation = 'none';
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
+                        // Reset all messages and signature
+                        document.querySelectorAll('.message').forEach(message => {
+                            message.classList.remove('show');
+                            message.classList.remove('fade-out');
+                            message.style.transform = '';
                         });
+                        document.querySelector('.signature-wrapper').classList.remove('show');
                     }
                 }
             });
@@ -531,12 +595,6 @@
             surpriseBtn.addEventListener('click', () => {
                 videoContainer.classList.add('show');
                 video.play();
-                
-                // Add a new message
-                const newMessage = document.createElement('p');
-                newMessage.textContent = "Your presence is like the gentle morning light, bringing warmth to my world.";
-                newMessage.style.animation = 'fadeIn 1s ease-in';
-                messageContainer.appendChild(newMessage);
             });
 
             // Back button functionality
@@ -544,6 +602,54 @@
                 videoContainer.classList.remove('show');
                 video.pause();
             });
+
+            // Function to animate messages with max 4 visible at a time
+            function animateMessages() {
+                const messages = document.querySelectorAll('.message');
+                const messageHeight = 50; // Approximate height of each message
+                const signatureWrapper = document.querySelector('.signature-wrapper');
+
+                function showMessage(index) {
+                    if (index >= messages.length) {
+                        // Show signature after last message
+                        setTimeout(() => {
+                            signatureWrapper.classList.add('show');
+                        }, 1000);
+                        return;
+                    }
+
+                    const message = messages[index];
+                    const position = (index % 4) * messageHeight;
+
+                    // If this is the fifth message (index 4), fade out the first four messages
+                    if (index === 4) {
+                        for (let i = 0; i < 4; i++) {
+                            messages[i].classList.add('fade-out');
+                            setTimeout(() => {
+                                messages[i].classList.remove('show');
+                                messages[i].classList.remove('fade-out');
+                            }, 500);
+                        }
+                    }
+
+                    // Position and show new message
+                    message.style.transform = `translateY(${position}px)`;
+                    message.classList.add('show');
+
+                    // Schedule next message
+                    const delay = parseInt(message.dataset.delay);
+                    const nextDelay = index + 1 < messages.length ? 
+                        parseInt(messages[index + 1].dataset.delay) - delay : 
+                        2000;
+
+                    setTimeout(() => {
+                        showMessage(index + 1);
+                    }, nextDelay);
+                }
+
+                // Start the animation
+                showMessage(0);
+            }
         });
     </script>
 </body>
