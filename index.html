@@ -508,69 +508,79 @@
         /* iPhone-specific adjustments */
         @media (max-width: 380px) {
             .envelope {
-                height: 300px;
+                height: 380px;
             }
 
             .envelope-flap {
-                height: 150px;
+                height: 190px;
+            }
+
+            .card {
+                padding: 0.5rem;
+                height: 100%;
             }
 
             .message-container {
-                min-height: 150px;
                 padding: 0.3rem;
-            }
-
-            .messages-wrapper {
-                height: 130px;
+                height: auto;
+                min-height: 220px;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                align-items: center;
+                justify-content: flex-start;
             }
 
-            .message-container .message {
-                font-size: 0.7rem;
-                line-height: 1;
-                margin-bottom: 0.15rem;
-                opacity: 0;
-                transition: opacity 0.3s ease;
+            .mobile-messages {
+                text-align: center;
+                font-size: 0.65rem;
+                color: #8b4513;
+                line-height: 1.1;
+                width: 100%;
+                padding: 0.2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 0.2rem;
             }
 
-            .message-container .message.show {
-                opacity: 1;
-                position: relative;
-                margin-bottom: 0.2rem;
-            }
-
-            /* Ensure the last message has enough space */
-            .message-container .message:last-child.show {
-                margin-bottom: 0;
+            .mobile-messages p {
+                margin: 0;
+                padding: 0;
+                width: 100%;
             }
 
             .header h1 {
-                font-size: 1rem;
-                margin-bottom: 0.15rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
             }
 
             .signature-wrapper {
-                bottom: 0.2rem;
-                right: 0.6rem;
+                margin-top: 0.3rem;
+                position: static;
+                width: 100%;
+                text-align: right;
+                opacity: 1;
             }
 
             .signature-prefix {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
+                margin-bottom: 0.1rem;
+            }
+            
+            .signature {
+                font-size: 0.75rem;
             }
 
-            .signature {
-                font-size: 0.8rem;
+            .button-container {
+                width: 100%;
+                margin-top: 0.2rem;
             }
 
             .surprise-btn {
-                padding: 0.5rem 1.2rem;
-                font-size: 0.85rem;
-            }
-
-            .valhalla-text {
-                font-size: 0.9em;
+                padding: 0.4rem 1rem;
+                font-size: 0.75rem;
+                width: 100%;
             }
         }
 
@@ -645,7 +655,7 @@
                                 <h1>Happy 29th Birthday Tiff! <i class="fas fa-heart"></i></h1>
                             </div>
                             <div class="message-container">
-                                <div class="messages-wrapper">
+                                <div class="desktop-messages messages-wrapper">
                                     <p class="message" data-delay="2000">Tiff...</p>
                                     <p class="message" data-delay="4000">In just four months...</p>
                                     <p class="message" data-delay="6000">Your smile became my favorite sight.</p>
@@ -654,6 +664,16 @@
                                     <p class="message" data-delay="14000">And tonight...</p>
                                     <p class="message" data-delay="18000">We're celebrating at <a href="https://www.valhallachicago.com/" target="_blank" class="valhalla-text">Valhalla</a>!</p>
                                     <p class="message" data-delay="22000">To our first celebration — and many more.</p>
+                                </div>
+                                <div class="mobile-messages" style="display: none;">
+                                    <p>Tiff...</p>
+                                    <p>In just four months...</p>
+                                    <p>Your smile became my favorite sight.</p>
+                                    <p>Your kindness warms my heart.</p>
+                                    <p>Today's a special day.</p>
+                                    <p>And tonight...</p>
+                                    <p>We're celebrating at <a href="https://www.valhallachicago.com/" target="_blank" class="valhalla-text">Valhalla</a>!</p>
+                                    <p>To our first celebration — and many more.</p>
                                 </div>
                                 <div class="signature-wrapper">
                                     <p class="signature-prefix">Yours,</p>
@@ -692,6 +712,9 @@
             const card = document.querySelector('.card');
             const backBtn = document.querySelector('.back-btn');
 
+            // Check if device is iPhone/small device
+            const isSmallDevice = window.innerWidth <= 380;
+
             // Heart animation on hover
             heart.addEventListener('mouseover', () => {
                 heart.style.transform = 'scale(1.1)';
@@ -714,7 +737,16 @@
                                 top: document.body.scrollHeight,
                                 behavior: 'smooth'
                             });
-                            animateMessages();
+                            if (window.innerWidth <= 380) {
+                                // For small devices, don't animate - show static content
+                                document.querySelector('.desktop-messages').style.display = 'none';
+                                document.querySelector('.mobile-messages').style.display = 'block';
+                                document.querySelector('.signature-wrapper').classList.add('show');
+                            } else {
+                                document.querySelector('.desktop-messages').style.display = 'block';
+                                document.querySelector('.mobile-messages').style.display = 'none';
+                                animateMessages();
+                            }
                         }, 1000);
                     } else {
                         card.style.animation = 'none';
@@ -741,7 +773,7 @@
                 video.pause();
             });
 
-            // Function to animate messages with max 4 visible at a time
+            // Function to animate messages with max 4 visible at a time for larger devices
             function animateMessages() {
                 const messages = document.querySelectorAll('.message');
                 const messageHeight = 50; // Approximate height of each message
