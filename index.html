@@ -449,13 +449,19 @@
             .message-container {
                 padding: 0.4rem;
                 margin-bottom: 0.3rem;
-                min-height: 140px;
+                min-height: 160px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
             .messages-wrapper {
-                height: 120px;
+                height: 140px;
                 position: relative;
                 margin-top: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
             
             .message-container .message {
@@ -502,26 +508,42 @@
         /* iPhone-specific adjustments */
         @media (max-width: 380px) {
             .envelope {
-                height: 280px;
+                height: 300px;
             }
 
             .envelope-flap {
-                height: 140px;
+                height: 150px;
             }
 
             .message-container {
-                min-height: 130px;
+                min-height: 150px;
                 padding: 0.3rem;
             }
 
             .messages-wrapper {
-                height: 110px;
+                height: 130px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
             .message-container .message {
                 font-size: 0.7rem;
                 line-height: 1;
-                margin-bottom: 0.12rem;
+                margin-bottom: 0.15rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .message-container .message.show {
+                opacity: 1;
+                position: relative;
+                margin-bottom: 0.2rem;
+            }
+
+            /* Ensure the last message has enough space */
+            .message-container .message:last-child.show {
+                margin-bottom: 0;
             }
 
             .header h1 {
@@ -583,6 +605,13 @@
             padding: 0 0.2em;
             font-style: italic;
             letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .valhalla-text:hover {
+            color: #654321;
+            text-shadow: 2px 2px 3px rgba(139, 69, 19, 0.3);
         }
     </style>
 </head>
@@ -623,7 +652,7 @@
                                     <p class="message" data-delay="8000">Your kindness warms my heart.</p>
                                     <p class="message" data-delay="12000">Today's a special day.</p>
                                     <p class="message" data-delay="14000">And tonight...</p>
-                                    <p class="message" data-delay="18000">We're celebrating at <span class="valhalla-text">Valhalla</span>!</p>
+                                    <p class="message" data-delay="18000">We're celebrating at <a href="https://www.valhallachicago.com/" target="_blank" class="valhalla-text">Valhalla</a>!</p>
                                     <p class="message" data-delay="22000">To our first celebration — and many more.</p>
                                 </div>
                                 <div class="signature-wrapper">
