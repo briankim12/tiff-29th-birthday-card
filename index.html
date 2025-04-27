@@ -508,78 +508,102 @@
         /* iPhone-specific adjustments */
         @media (max-width: 380px) {
             .envelope {
-                height: 380px;
+                height: 450px;
             }
 
             .envelope-flap {
-                height: 190px;
+                height: 225px;
             }
 
             .card {
-                padding: 0.5rem;
-                height: 100%;
-            }
-
-            .message-container {
                 padding: 0.3rem;
-                height: auto;
-                min-height: 220px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-            }
-
-            .mobile-messages {
-                text-align: center;
-                font-size: 0.65rem;
-                color: #8b4513;
-                line-height: 1.1;
-                width: 100%;
-                padding: 0.2rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 0.2rem;
-            }
-
-            .mobile-messages p {
-                margin: 0;
-                padding: 0;
-                width: 100%;
             }
 
             .header h1 {
-                font-size: 0.9rem;
-                margin-bottom: 0.3rem;
+                font-size: 0.85rem;
+                line-height: 1;
+                margin: 0 0 0.3rem 0;
+            }
+            
+            .message-container {
+                padding: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .message-container .message {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                font-size: 12px;
+                line-height: 1;
+            }
+            
+            .message-container .message.show {
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            /* Override any other spacing between messages */
+            .message {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Reset transforms that might affect spacing */
+            .message.show {
+                transform: none !important;
+            }
+
+            .messages-wrapper {
+                position: static !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            .message-container .message {
+                position: static !important;
+                transform: none !important;
+                opacity: 0;
+                font-size: 0.65rem;
+                line-height: 1.1;
+                margin-bottom: 0.2rem;
+                text-align: center;
+                display: block !important;
+            }
+
+            .message-container .message.fade-out {
+                opacity: 0 !important;
+            }
+
+            /* Show all messages statically on mobile */
+            .message-container .message:nth-child(1),
+            .message-container .message:nth-child(2),
+            .message-container .message:nth-child(3),
+            .message-container .message:nth-child(4) {
+                opacity: 1 !important;
             }
 
             .signature-wrapper {
-                margin-top: 0.3rem;
                 position: static;
-                width: 100%;
+                margin-top: 0.2rem;
                 text-align: right;
-                opacity: 1;
             }
 
             .signature-prefix {
                 font-size: 0.65rem;
-                margin-bottom: 0.1rem;
+                margin-bottom: 0;
             }
-            
+
             .signature {
                 font-size: 0.75rem;
             }
 
             .button-container {
-                width: 100%;
-                margin-top: 0.2rem;
+                margin-top: 0.3rem;
             }
 
             .surprise-btn {
-                padding: 0.4rem 1rem;
-                font-size: 0.75rem;
+                padding: 0.4rem;
+                font-size: 0.7rem;
                 width: 100%;
             }
         }
@@ -623,6 +647,58 @@
             color: #654321;
             text-shadow: 2px 2px 3px rgba(139, 69, 19, 0.3);
         }
+
+        @media only screen and (max-width: 380px) {
+            .message-container {
+                padding: 2px !important;
+                margin: 0 !important;
+                min-height: 0 !important;
+                height: auto !important;
+                box-shadow: none !important;
+                border: none !important;
+                background: transparent !important;
+            }
+            .messages-wrapper {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .message {
+                display: block !important;
+                opacity: 1 !important;
+                position: static !important;
+                font-size: 11px !important;
+                line-height: 1 !important;
+                margin: 0 0 2px 0 !important;
+                padding: 0 !important;
+                transform: none !important;
+            }
+            .signature-wrapper {
+                position: static !important;
+                margin-top: 4px !important;
+                text-align: right !important;
+                opacity: 1 !important;
+            }
+            .signature-prefix {
+                font-size: 10px !important;
+                margin-bottom: 0 !important;
+            }
+            .signature {
+                font-size: 11px !important;
+            }
+            .header h1 {
+                font-size: 13px !important;
+                margin-bottom: 2px !important;
+            }
+            .button-container {
+                margin-top: 4px !important;
+            }
+            .surprise-btn {
+                padding: 0.2rem !important;
+                font-size: 11px !important;
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -655,7 +731,7 @@
                                 <h1>Happy 29th Birthday Tiff! <i class="fas fa-heart"></i></h1>
                             </div>
                             <div class="message-container">
-                                <div class="desktop-messages messages-wrapper">
+                                <div class="messages-wrapper">
                                     <p class="message" data-delay="2000">Tiff...</p>
                                     <p class="message" data-delay="4000">In just four months...</p>
                                     <p class="message" data-delay="6000">Your smile became my favorite sight.</p>
@@ -664,16 +740,6 @@
                                     <p class="message" data-delay="14000">And tonight...</p>
                                     <p class="message" data-delay="18000">We're celebrating at <a href="https://www.valhallachicago.com/" target="_blank" class="valhalla-text">Valhalla</a>!</p>
                                     <p class="message" data-delay="22000">To our first celebration — and many more.</p>
-                                </div>
-                                <div class="mobile-messages" style="display: none;">
-                                    <p>Tiff...</p>
-                                    <p>In just four months...</p>
-                                    <p>Your smile became my favorite sight.</p>
-                                    <p>Your kindness warms my heart.</p>
-                                    <p>Today's a special day.</p>
-                                    <p>And tonight...</p>
-                                    <p>We're celebrating at <a href="https://www.valhallachicago.com/" target="_blank" class="valhalla-text">Valhalla</a>!</p>
-                                    <p>To our first celebration — and many more.</p>
                                 </div>
                                 <div class="signature-wrapper">
                                     <p class="signature-prefix">Yours,</p>
@@ -737,14 +803,11 @@
                                 top: document.body.scrollHeight,
                                 behavior: 'smooth'
                             });
+                            // For iPhone, do not animate, just show all messages
                             if (window.innerWidth <= 380) {
-                                // For small devices, don't animate - show static content
-                                document.querySelector('.desktop-messages').style.display = 'none';
-                                document.querySelector('.mobile-messages').style.display = 'block';
+                                document.querySelectorAll('.message').forEach(msg => msg.classList.add('show'));
                                 document.querySelector('.signature-wrapper').classList.add('show');
                             } else {
-                                document.querySelector('.desktop-messages').style.display = 'block';
-                                document.querySelector('.mobile-messages').style.display = 'none';
                                 animateMessages();
                             }
                         }, 1000);
