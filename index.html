@@ -250,7 +250,7 @@
         }
 
         .signature {
-            font-family: 'Brush Script MT', cursive;
+            font-family: 'Brush Script MT', cursive !important;
             font-size: 1.4rem;
             color: #8b4513;
             margin: 0;
@@ -443,32 +443,34 @@
             
             .header h1 {
                 font-size: 1.1rem;
-                margin-bottom: 0.2rem;
+                max-width: none;
+                word-break: normal;
             }
             
             .message-container {
-                padding: 0.4rem;
-                margin-bottom: 0.3rem;
-                min-height: 160px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+                width: auto;
+                max-width: none;
+                margin: initial;
+                min-height: 120px;
+                max-height: 180px;
+                padding-top: 0 !important;
             }
 
             .messages-wrapper {
-                height: 140px;
                 position: relative;
-                margin-top: 0.5rem;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
             }
             
             .message-container .message {
-                font-size: 0.75rem;
-                line-height: 1.1;
-                margin-bottom: 0.15rem;
-                padding: 0.1rem 0;
+                position: absolute;
+                left: 0;
+                right: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-top: 0 !important;
             }
 
             .signature-wrapper {
@@ -594,7 +596,8 @@
             }
 
             .signature {
-                font-size: 0.75rem;
+                font-size: 0.75rem !important;
+                font-family: 'Brush Script MT', cursive !important;
             }
 
             .button-container {
@@ -841,6 +844,8 @@
                 const messages = document.querySelectorAll('.message');
                 const messageHeight = 50; // Approximate height of each message
                 const signatureWrapper = document.querySelector('.signature-wrapper');
+                const maxVisible = 4;
+                const isMobile = window.innerWidth <= 768;
 
                 function showMessage(index) {
                     if (index >= messages.length) {
@@ -852,12 +857,54 @@
                     }
 
                     const message = messages[index];
-                    const position = (index % 4) * messageHeight;
                     const currentDelay = parseInt(message.dataset.delay);
 
+                    let position;
+                    if (isMobile) {
+                        // For mobile: stack tightly from the top with reduced spacing
+                        let groupStart = Math.floor(index / maxVisible) * maxVisible;
+                        let offset = 0;
+                        for (let i = groupStart; i < index; i++) {
+                            offset += messageHeight * 0.725; // 27.5% reduced spacing
+                        }
+                        position = offset;
+
+                        // Shrink font size so message fits in width
+                        let fontSize = 16; // start at 16px
+                        if (isMobile) {
+                            message.style.lineHeight = (messageHeight * 0.725) + 'px';
+                        } else {
+                            message.style.lineHeight = messageHeight + 'px';
+                        }
+                        message.style.fontSize = fontSize + 'px';
+                        message.style.whiteSpace = 'nowrap';
+                        message.style.overflow = 'hidden';
+                        message.style.textOverflow = 'ellipsis';
+                        let wrapper = message.parentElement;
+                        let wrapperWidth = wrapper.offsetWidth;
+                        // Set font size to 12px for 3rd and 8th lines
+                        if (index === 2 || index === 7) {
+                            fontSize = 12;
+                            message.style.fontSize = fontSize + 'px';
+                        } else {
+                            while (message.scrollWidth > wrapperWidth && fontSize > 14) {
+                                fontSize -= 0.25;
+                                message.style.fontSize = fontSize + 'px';
+                            }
+                            // Make the last line smaller by 0.8x
+                            if (index === messages.length - 1) {
+                                fontSize = Math.max(14, fontSize * 0.8);
+                                message.style.fontSize = fontSize + 'px';
+                            }
+                        }
+                    } else {
+                        // Desktop: normal stacking
+                        position = (index % maxVisible) * messageHeight;
+                    }
+
                     // If this is the fifth message (index 4), fade out the first four messages
-                    if (index === 4) {
-                        for (let i = 0; i < 4; i++) {
+                    if (index === maxVisible) {
+                        for (let i = 0; i < maxVisible; i++) {
                             messages[i].classList.add('fade-out');
                             setTimeout(() => {
                                 messages[i].classList.remove('show');
